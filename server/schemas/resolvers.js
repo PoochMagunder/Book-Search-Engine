@@ -1,0 +1,64 @@
+const { User } = require('../models');
+const { signToken } = require('../utils/auth');
+const { AuthenticationError } = require('apollo-server-express');
+
+const resolvers = {
+    Query: {
+        me: async (parent, {userId}) => {
+            return User.findOne({ _id: userId });
+        },
+    },
+
+    Mutation: {
+        addUser: async (parent, { username, email, password }) => {
+            const user = await User.create({ username, email, password });
+            const token = signToken(user);
+
+            return { token, user };
+        },
+        login: async (parent, { email, password }) => {
+            const user = await User.findOne({ email });
+
+            if (!user) {
+            throw new AuthenticationError('You need to be logged in');
+            }
+
+            const correctPw = await User.isCorrectPassword(password);
+
+            if (!correctPw) {
+                throw new AuthenticationError('Incorrect password');
+            }
+
+            const token = signToken(user);
+            return { token, user };
+        },
+        saveBook: async (parent, { userId, savedBook }, context) => {
+
+            if (context.user) {
+                return User.findOneAndUpdate(
+                    { _id: userId },
+                    {
+                        $addToSet: { savedBooks: savedBook },
+                    },
+                    {
+                        new: true,
+                        runValidators: true,
+                    }
+                );
+            }
+            throw new AuthenticationError('You need to be logged in');
+        },
+        removeBook: async (parent, { savedBook }, context) => {
+            if (context.user) {
+                return User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { savedBooks: savedBook }},
+                    { new: true }
+                );
+            }
+            throw new AuthenticationError('You need to be logged in');
+        },
+    },
+};
+
+module.exports = resolvers;
