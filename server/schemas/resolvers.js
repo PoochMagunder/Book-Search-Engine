@@ -4,7 +4,7 @@ const { AuthenticationError } = require('apollo-server-express');
 
 const resolvers = {
     Query: {
-        me: async (parent, {userId}) => {
+        me: async (parent, arg, {userId}) => {
             return User.findOne({ _id: userId });
         },
     },
@@ -23,7 +23,7 @@ const resolvers = {
             throw new AuthenticationError('You need to be logged in');
             }
 
-            const correctPw = await User.isCorrectPassword(password);
+            const correctPw = await user.isCorrectPassword(password);
 
             if (!correctPw) {
                 throw new AuthenticationError('Incorrect password');
@@ -33,12 +33,12 @@ const resolvers = {
             return { token, user };
         },
         saveBook: async (parent, { userId, savedBook }, context) => {
-
+            console.log('hello')
             if (context.user) {
                 return User.findOneAndUpdate(
                     { _id: userId },
                     {
-                        $addToSet: { savedBooks: savedBook },
+                        $addToSet: { savedBooks: { savedBook }},
                     },
                     {
                         new: true,

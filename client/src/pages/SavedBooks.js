@@ -28,13 +28,13 @@ const SavedBooks = () => {
           return false;
         }
 
-        const response = await GET_ME(token);
+        const response = await GET_ME({variable: token});
 
-        if (!response.ok) {
+        if (!response.data) {
           throw new Error('something went wrong!');
         }
-
-        const user = await response.json();
+        console.log(response.data)
+        const user = await response.data;
         setUserData(user);
       } catch (err) {
         console.error(err);
