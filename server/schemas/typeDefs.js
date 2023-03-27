@@ -7,7 +7,6 @@ type User {
     email: String
     bookCount: Int
     savedBooks: [Book]
-    path: 
     }
 
     type Book {
