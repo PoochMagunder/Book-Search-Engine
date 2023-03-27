@@ -8,10 +8,10 @@ const resolvers = {
             console.log(context)
               const user = await context;
               return {
-                _id: user._id,
-                username: user.username,
-                bookCount: user.bookCount,
-                savedBooks: user.savedBooks
+                _id: user.user._id,
+                username: user.user.username,
+                bookCount: user.body.query.bookCount,
+                savedBooks: user.body.query.savedBooks
               };
             }
         },
