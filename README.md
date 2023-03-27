@@ -27,7 +27,7 @@ The results will be returned in the response.
 Click the "Save book" button to add it to your favorites list.
 To view your favorites list, send a GraphQL query to retrieve it.
 
-![Screenshot](../../../Pictures/Screenshots/Screenshot%20(8).png)
+[Screenshot](../../../Pictures/Screenshots/Screenshot%20(8).png)
 
 [Link to Page](https://ancient-earth-33907.herokuapp.com/)
 
